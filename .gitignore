@@ -1,0 +1,5 @@
+*/pcb/output/
+*/pcb/*-backups/
+*.kicad_prl
+sym-lib-table
+fp-info-cache

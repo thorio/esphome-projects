@@ -1,0 +1,89 @@
+esphome:
+  name: bed-occupancy
+
+esp8266:
+  board: esp01_1m
+
+logger:
+
+api:
+  encryption:
+    key: "your_secret_here"
+
+ota:
+  password: "your_secret_here"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: true
+
+globals:
+  - id: tare_zero
+    type: float
+    restore_value: yes
+    initial_value: "0"
+
+status_led:
+  pin:
+    number: GPIO2
+    inverted: true
+
+button:
+  - platform: template
+    id: tare_button
+    name: Bed Occupancy Tare
+    icon: mdi:scale-balance
+    on_press:
+      - lambda: |-
+          id(tare_zero) = id(sensor_value).state;
+
+sensor:
+  - platform: hx711
+    id: sensor_value
+    internal: true
+    dout_pin: TX
+    clk_pin: RX
+    gain: 128
+    update_interval: 0.1s
+    filters:
+      - median:
+          window_size: 20
+          send_every: 10
+      - delta: 0.5
+      - calibrate_linear:
+          - 70156 -> 0.0
+          - 1221042 -> 67.2
+    on_value:
+      then:
+        - sensor.template.publish:
+            id: output_value
+            state: !lambda "return id(sensor_value).state;"
+
+  - platform: template
+    id: output_value
+    name: Bed Occupancy Weight
+    internal: false
+    filters:
+      - lambda: return x - id(tare_zero);
+      - lambda: |-
+          if (x >= -1 && x <= 1) {
+            return 0.0;
+          } else {
+            return x;
+          }
+    device_class: weight
+    unit_of_measurement: kg
+    icon: mdi:scale
+
+binary_sensor:
+  - platform: analog_threshold
+    name: "Bed Occupancy Occupancy"
+    id: binary_value
+    sensor_id: output_value
+    threshold: 20
+    filters:
+      - delayed_on: 2s
+      - delayed_off: 1s
+    device_class: occupancy
+    icon: mdi:bed-outline
