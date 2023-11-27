@@ -731,7 +731,7 @@
     (pin "1" (uuid 384ea9b2-b1ed-49f2-baaf-3f01cd3e422c))
     (pin "2" (uuid 8cc8ad08-068d-45b1-bc2b-9103a98ac5af))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "J7") (unit 1)
         )
@@ -756,7 +756,7 @@
     )
     (pin "1" (uuid 08668380-c718-4064-a647-117e688d2526))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "#PWR04") (unit 1)
         )
@@ -781,7 +781,7 @@
     )
     (pin "1" (uuid 03c7ee6d-8001-405b-9d2f-c34d90cdca5a))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "#PWR0101") (unit 1)
         )
@@ -807,7 +807,7 @@
     (pin "1" (uuid 31cefddf-246f-4aeb-89a2-211c054c769d))
     (pin "2" (uuid 0ef8ed7d-c896-4759-9836-da7d0732da4c))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "J1") (unit 1)
         )
@@ -832,7 +832,7 @@
     )
     (pin "1" (uuid 713c8a18-6613-4a31-b4fd-0f99f06ed75c))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "#FLG0101") (unit 1)
         )
@@ -856,7 +856,7 @@
       (effects (font (size 1.27 1.27)) hide)
     )
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "H1") (unit 1)
         )
@@ -880,7 +880,7 @@
       (effects (font (size 1.27 1.27)) hide)
     )
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "H4") (unit 1)
         )
@@ -905,7 +905,7 @@
     )
     (pin "1" (uuid 06a1dd92-85c4-4423-a61b-f4e86d6752dd))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "#PWR03") (unit 1)
         )
@@ -939,7 +939,7 @@
     (pin "8" (uuid cdbc82e6-6910-45e0-becd-86da9f3983c3))
     (pin "9" (uuid 56648699-9677-4cf6-8171-3cc4a912f239))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "U1") (unit 1)
         )
@@ -964,7 +964,7 @@
     )
     (pin "1" (uuid fd2c07d2-0b2a-43e7-871b-bb253775cd3d))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "#PWR0102") (unit 1)
         )
@@ -996,7 +996,7 @@
     (pin "7" (uuid e250e4d5-48a6-492c-82ca-e94a94d44898))
     (pin "8" (uuid 3b4347ef-13e3-429c-a4f1-90c16b97f324))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "U2") (unit 1)
         )
@@ -1023,7 +1023,7 @@
     (pin "2" (uuid 012d0e29-b962-4733-b60c-314465db04f8))
     (pin "3" (uuid c901f084-485f-4074-9379-fa25d1b9985f))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "J5") (unit 1)
         )
@@ -1048,7 +1048,7 @@
     )
     (pin "1" (uuid 0be3e294-4012-455a-a655-ceb70ddfe224))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "#PWR01") (unit 1)
         )
@@ -1072,7 +1072,7 @@
       (effects (font (size 1.27 1.27)) hide)
     )
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "H2") (unit 1)
         )
@@ -1098,7 +1098,7 @@
     (pin "1" (uuid 3b02c125-cda5-4994-aa62-a8a5652d8ce1))
     (pin "2" (uuid 48c711e9-1e10-484e-9f20-db0e19541e7f))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "J8") (unit 1)
         )
@@ -1123,7 +1123,7 @@
     )
     (pin "1" (uuid 7f57489d-925b-4374-889a-69b370040a54))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "#PWR02") (unit 1)
         )
@@ -1150,7 +1150,7 @@
     (pin "2" (uuid d702fdf8-5c10-4cb5-85af-045a464a9222))
     (pin "3" (uuid 587f4188-92ab-43be-b712-4b343b9c73fb))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "J4") (unit 1)
         )
@@ -1178,7 +1178,7 @@
     (pin "3" (uuid b53b42c0-640d-4037-b9a0-99a2ca6ec258))
     (pin "4" (uuid 40fccd0d-29ef-4620-bc67-55b977df4b9a))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "U3") (unit 1)
         )
@@ -1203,7 +1203,7 @@
     )
     (pin "1" (uuid d0433934-6d1d-4ea9-bd54-bfd52a44142f))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "#PWR05") (unit 1)
         )
@@ -1227,7 +1227,7 @@
       (effects (font (size 1.27 1.27)) hide)
     )
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "H5") (unit 1)
         )
@@ -1254,7 +1254,7 @@
     (pin "2" (uuid f8d3235e-06b4-4ba2-b640-21645cb5080e))
     (pin "3" (uuid 38676a6e-3a85-49f1-abd7-747e98a49651))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "J3") (unit 1)
         )
@@ -1281,7 +1281,7 @@
     (pin "2" (uuid 0ce39d46-1052-4ccb-ab6a-4f45ae48bbfc))
     (pin "3" (uuid f78165f3-6bbd-4c33-af3a-a4d5bc52652c))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "J6") (unit 1)
         )
@@ -1307,7 +1307,7 @@
     (pin "1" (uuid f2f8686f-ddf1-4df7-a548-11cc0caf9e3a))
     (pin "2" (uuid 655a0f29-a5cc-4022-8e3e-4d4d2103faf8))
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "C1") (unit 1)
         )
@@ -1331,7 +1331,7 @@
       (effects (font (size 1.27 1.27)) hide)
     )
     (instances
-      (project "esphome-bed-occupancy"
+      (project "bed-occupancy"
         (path "/7a7d73db-852c-4ebf-82cf-fdbb115a5e60"
           (reference "H3") (unit 1)
         )

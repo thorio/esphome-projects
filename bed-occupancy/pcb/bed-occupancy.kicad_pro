@@ -403,7 +403,7 @@
     "pinned_symbol_libs": []
   },
   "meta": {
-    "filename": "esphome-bed-occupancy.kicad_pro",
+    "filename": "bed-occupancy.kicad_pro",
     "version": 1
   },
   "net_settings": {
@@ -461,8 +461,8 @@
       "idf": "",
       "netlist": "",
       "specctra_dsn": "",
-      "step": "esphome-bed-occupancy.step",
-      "vrml": "esphome-bed-occupancy.wrl"
+      "step": "bed-occupancy.step",
+      "vrml": "bed-occupancy.wrl"
     },
     "page_layout_descr_file": ""
   },
