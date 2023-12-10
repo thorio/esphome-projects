@@ -1,0 +1,121 @@
+# Shamelessly stolen and modified from [esphome-devices](https://github.com/esphome/esphome-devices/blob/main/src/docs/devices/Shelly-Plug-S/index.md), which is licensed under GPL-3.0.
+
+esphome:
+  name: esphome-shelly-plug-s
+  friendly_name: ESPHome Shelly Plug S
+
+esp8266:
+  board: esp01_1m
+  restore_from_flash: true
+
+logger:
+
+api:
+  encryption:
+    key: "your_secret_here"
+
+ota:
+  password: "your_secret_here"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+  # I've left the fallback AP in here, since it'd be annoying to reflash without OTA
+  ap:
+    ssid: "esphome-shelly-plug-s Fallback Hotspot"
+    password: "your_secret_here"
+
+captive_portal:
+
+time:
+  - platform: homeassistant
+    id: homeassistant_time
+
+binary_sensor:
+  - platform: gpio
+    id: button
+    internal: true
+    pin:
+      number: GPIO13
+      inverted: True
+    on_press:
+      - switch.toggle: relay
+
+status_led:
+  pin:
+    number: GPIO02
+    inverted: True
+
+switch:
+  - platform: gpio
+    pin: GPIO15
+    id: relay
+    name: "Relay"
+    restore_mode: RESTORE_DEFAULT_OFF
+
+sensor:
+  - id: temperature
+    platform: ntc
+    internal: true
+    sensor: temp_resistance_reading
+    calibration:
+      b_constant: 3350
+      reference_resistance: 10kOhm
+      reference_temperature: 298.15K
+    on_value_range:
+      - above: 70
+        then:
+          - switch.turn_off: relay
+
+  - id: temp_resistance_reading
+    platform: resistance
+    sensor: temp_analog_reading
+    configuration: DOWNSTREAM
+    resistor: 32kOhm
+
+  - id: temp_analog_reading
+    platform: adc
+    pin: A0
+
+  - platform: hlw8012
+    model: BL0937
+    sel_pin:
+      number: GPIO12
+      inverted: true
+    cf_pin: GPIO05
+    cf1_pin: GPIO14
+    current_resistor: 0.000943
+    voltage_divider: 1766
+    current:
+      id: current
+      internal: true
+      on_value_range:
+        - above: 10
+          then:
+            - switch.turn_off: relay
+    voltage:
+      name: "Voltage"
+      internal: true
+    power:
+      name: "Power Draw"
+      id: power
+      unit_of_measurement: "W"
+      filters:
+        - calibrate_linear:
+          - 0.0 -> 0.0
+          - 1710.0 -> 1685.0
+      icon: mdi:flash-outline
+      on_value_range:
+        - above: 2000
+          then:
+            - switch.turn_off: relay
+    update_interval: 5s
+
+  - platform: total_daily_energy
+    name: "Total Consumption"
+    power_id: power
+    filters:
+      - multiply: 0.001
+    unit_of_measurement: kWh
+    restore: false # reduce wear on flash

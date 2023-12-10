@@ -3,3 +3,5 @@
 *.kicad_prl
 sym-lib-table
 fp-info-cache
+
+*.code-workspace

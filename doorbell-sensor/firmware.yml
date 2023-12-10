@@ -1,0 +1,48 @@
+esphome:
+  name: doorbell
+  on_boot:
+    - priority: 100
+      then:
+        - switch.turn_on: status_led
+        - delay: 1s
+        - switch.turn_off: status_led
+
+esp8266:
+  board: esp01_1m
+
+logger:
+
+api:
+  encryption:
+    key: "your_secret_here"
+
+ota:
+  password: "your_secret_here"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+switch:
+  - platform: gpio
+    id: status_led
+    pin: GPIO2
+    internal: true
+    inverted: true
+    restore_mode: ALWAYS_OFF
+
+binary_sensor:
+  - platform: gpio
+    id: doorbell
+    name: "Doorbell"
+    icon: mdi:bell-alert
+    pin: TX
+    filters:
+      - delayed_on: 500ms
+      - invert:
+    on_press:
+      then:
+        - switch.turn_on: status_led
+    on_release:
+      then:
+        - switch.turn_off: status_led

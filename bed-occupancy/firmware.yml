@@ -16,7 +16,6 @@ ota:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-  fast_connect: true
 
 globals:
   - id: tare_zero
