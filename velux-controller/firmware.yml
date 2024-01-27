@@ -1,0 +1,95 @@
+esphome:
+  name: esphome-velux-controller
+  friendly_name: ESPHome velux-controller
+
+esp8266:
+  board: esp01_1m
+
+logger:
+
+api:
+  encryption:
+    key: "your_secret_here"
+
+ota:
+  password: "your_secret_here"
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+
+# We can't use buttons and outputs, because we need to be able to
+# read the output's state for the input filtering below.
+switch:
+  - platform: gpio
+    id: output_up
+    pin: GPIO12
+    on_turn_on:
+      then:
+        - delay: 200ms
+        - switch.turn_off: output_up
+  - platform: gpio
+    id: output_stop
+    pin: GPIO5
+    on_turn_on:
+      then:
+        - delay: 200ms
+        - switch.turn_off: output_stop
+  - platform: gpio
+    id: output_down
+    pin: GPIO4
+    on_turn_on:
+      then:
+        - delay: 200ms
+        - switch.turn_off: output_down
+
+# These pins are connected to the output, and will be low if either:
+# - We set the output pins
+# - Someone presses the physical buttons on the original remote
+#
+# To avoid interference from ourselves, we ignore the input pins
+# if we're the ones driving the output low.
+binary_sensor:
+  - platform: gpio
+    id: sense_up
+    pin: GPIO16
+    filters:
+      - lambda: !lambda return !(x || id(output_up).state);
+    on_press:
+      then:
+        - cover.open: shutters
+  - platform: gpio
+    id: sense_stop
+    pin: GPIO14
+    filters:
+      - lambda: !lambda return !(x || id(output_stop).state);
+    on_press:
+      then:
+        - cover.stop: shutters
+  - platform: gpio
+    id: sense_down
+    pin: GPIO13
+    filters:
+      - lambda: !lambda return !(x || id(output_down).state);
+    on_press:
+      then:
+        - cover.close: shutters
+
+cover:
+  - platform: time_based
+    id: shutters
+    name: Window Shutters
+    has_built_in_endstop: true
+    manual_control: true
+    assumed_state: true
+
+    open_action:
+      - switch.turn_on: output_up
+    open_duration: 30s # measure this
+
+    close_action:
+      - switch.turn_on: output_down
+    close_duration: 30s # measure this
+
+    stop_action:
+      - switch.turn_on: output_stop
