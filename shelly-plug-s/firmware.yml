@@ -20,12 +20,12 @@ ota:
 wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
-
-  # I've left the fallback AP in here, since it'd be annoying to reflash without OTA
   ap:
     ssid: "esphome-shelly-plug-s Fallback Hotspot"
     password: "your_secret_here"
 
+# Since it might be a royal PITA to get fresh firmware on this
+# thing without OTA, enable fallback hotspot (above) and portal.
 captive_portal:
 
 time:
