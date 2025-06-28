@@ -18,8 +18,23 @@ wifi:
   ssid: !secret wifi_ssid
   password: !secret wifi_password
 
-# We can't use buttons and outputs, because we need to be able to
-# read the output's state for the input filtering below.
+# Globals to track position and movement
+globals:
+  - id: shutter_position
+    type: float
+    restore_value: true
+    initial_value: '0.0'  # 0.0 = closed, 1.0 = open
+  - id: last_direction
+    type: int
+    restore_value: true
+    initial_value: '0'  # 0 = stop, 1 = opening, -1 = closing
+  - id: movement_start_time
+    type: unsigned long
+    initial_value: '0'
+  - id: target_position
+    type: float
+    initial_value: '0.0'  # Desired end position
+    
 switch:
   - platform: gpio
     id: output_up
@@ -75,21 +90,163 @@ binary_sensor:
       then:
         - cover.close: shutters
 
+# Template cover that tracks position accurately
 cover:
-  - platform: time_based
+  - platform: template
     id: shutters
     name: Window Shutters
-    has_built_in_endstop: true
-    manual_control: true
-    assumed_state: true
-
+    has_position: true
+    
+    # Simple function to report current position
+    lambda: |-
+      return id(shutter_position);
+    
     open_action:
+      - lambda: |-
+          id(last_direction) = 1;
+          id(movement_start_time) = millis();
+          id(target_position) = 1.0;  // Fully open
       - switch.turn_on: output_up
-    open_duration: 30s # measure this
-
+      
     close_action:
+      - lambda: |-
+          id(last_direction) = -1;
+          id(movement_start_time) = millis();
+          id(target_position) = 0.0;  // Fully closed
       - switch.turn_on: output_down
-    close_duration: 30s # measure this
-
+      
     stop_action:
+      - lambda: |-
+          id(last_direction) = 0;
       - switch.turn_on: output_stop
+      
+    position_action:
+      - lambda: |-
+          float target = pos;
+          float current = id(shutter_position);
+          
+          // Always update target position, even during movement
+          id(target_position) = target;
+          
+          // If we're already moving in the right direction, just update target
+          if (id(last_direction) == 1 && target > current) {
+            // Already opening and target is higher - just update target
+            return;
+          } else if (id(last_direction) == -1 && target < current) {
+            // Already closing and target is lower - just update target  
+            return;
+          }
+          
+          // Stop current movement first if we need to change direction
+          if (id(last_direction) != 0) {
+            // Update current position before changing direction
+            unsigned long now = millis();
+            float elapsed = (now - id(movement_start_time)) / 1000.0;
+            float movement = elapsed / 18.0;
+            
+            if (id(last_direction) == 1) {
+              id(shutter_position) = min(1.0f, id(shutter_position) + movement);
+            } else if (id(last_direction) == -1) {
+              id(shutter_position) = max(0.0f, id(shutter_position) - movement);
+            }
+            
+            // Brief stop before changing direction
+            id(output_stop).turn_on();
+          }
+          
+          // Determine new direction
+          current = id(shutter_position); // Use updated position
+          if (target > current + 0.01) { // Small tolerance to avoid jitter
+            id(last_direction) = 1;
+            id(movement_start_time) = millis();
+          } else if (target < current - 0.01) {
+            id(last_direction) = -1;
+            id(movement_start_time) = millis();
+          } else {
+            // Already at target position
+            id(last_direction) = 0;
+            id(shutter_position) = target;
+            return;
+          }
+      - delay: 50ms  # Brief delay after stop before new movement
+      - if:
+          condition:
+            lambda: 'return id(last_direction) == 1;'
+          then:
+            - switch.turn_on: output_up
+      - if:
+          condition:
+            lambda: 'return id(last_direction) == -1;'
+          then:
+            - switch.turn_on: output_down
+
+# Single interval for all updates
+interval:
+  - interval: 1s  # Calculate position every 1 second
+    then:
+      - lambda: |-
+          // Only calculate when moving
+          if (id(last_direction) != 0) {
+            unsigned long now = millis();
+            float elapsed = (now - id(movement_start_time)) / 1000.0;
+            float movement = elapsed / 18.0;  // 18 seconds for full open/close
+            
+            if (id(last_direction) == 1) {  // Opening
+              id(shutter_position) = min(1.0f, id(shutter_position) + movement);
+            } else if (id(last_direction) == -1) {  // Closing
+              id(shutter_position) = max(0.0f, id(shutter_position) - movement);
+            }
+            
+            id(movement_start_time) = now;
+            
+            // Check if we've reached target or end position
+            bool should_stop = false;
+            
+            if (id(shutter_position) >= 1.0f && id(last_direction) == 1) {
+              id(shutter_position) = 1.0f;
+              should_stop = true;
+            } else if (id(shutter_position) <= 0.0f && id(last_direction) == -1) {
+              id(shutter_position) = 0.0f;
+              should_stop = true;
+            } else if (id(last_direction) == 1 && id(shutter_position) >= id(target_position)) {
+              id(shutter_position) = id(target_position);
+              should_stop = true;
+            } else if (id(last_direction) == -1 && id(shutter_position) <= id(target_position)) {
+              id(shutter_position) = id(target_position);
+              should_stop = true;
+            }
+            
+            if (should_stop) {
+              id(last_direction) = 0;
+              id(output_stop).turn_on();
+            }
+          }
+      - if:
+          condition:
+            lambda: 'return id(last_direction) != 0;'
+          then:
+            # Single publish during movement - both position and operation
+            - cover.template.publish:
+                id: shutters
+                position: !lambda 'return id(shutter_position);'
+                current_operation: !lambda |-
+                  if (id(last_direction) == 1) return COVER_OPERATION_OPENING;
+                  if (id(last_direction) == -1) return COVER_OPERATION_CLOSING;
+                  return COVER_OPERATION_IDLE;
+          else:
+            # Single publish when stopped - ensures IDLE status is sent once
+            - if:
+                condition:
+                  lambda: |-
+                    static unsigned long last_idle_publish = 0;
+                    unsigned long now = millis();
+                    if (now - last_idle_publish > 5000) { // Only every 5 seconds when idle
+                      last_idle_publish = now;
+                      return true;
+                    }
+                    return false;
+                then:
+                  - cover.template.publish:
+                      id: shutters
+                      position: !lambda 'return id(shutter_position);'
+                      current_operation: IDLE
